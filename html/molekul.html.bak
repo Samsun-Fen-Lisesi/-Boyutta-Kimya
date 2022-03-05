@@ -1,0 +1,25 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+</head> 
+	<iframe id="frmFile" src="hmg.txt" onload="LoadFile();" style="display: none;"></iframe>
+<script type="text/javascript">
+	function LoadFile() {
+		var div = document.getElementById('textContainer');
+		var oFrame = document.getElementById("frmFile");
+		var strRawContents = oFrame.contentWindow.document.body.childNodes[0].innerHTML;
+		while (strRawContents.indexOf("\r") >= 0)
+		            strRawContents = strRawContents.replace("\r", "");
+		var arrLines = strRawContents.split("\n");
+		console.log(arrLines);
+		for (var i = 0; i < arrLines.length; i++) {
+			var p = document.createElement('p');
+	        	var curLine = arrLines[i];
+			p.innerText=curLine;
+			div.appendChild(p);
+	        	//alert("Line #" + (i + 1) + " is: '" + curLine + "'");
+	         }
+	}
+</script>
+<div id='textContainer'></div>
+</html>

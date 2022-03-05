@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Üç Boyutta Kimya</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="stats.min.js"></script>
+    <div id="world">
+        <canvas id="molecule"></canvas>
+        <div id="main">
+
+            <div id="container">
+                <table width="50%" height="200px" cellspacing="0" cellpadding="0" id="MolTable">
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div id ="btn2", style="height: 60px; width: 150px;">
+                <button id = "gndr" style="height: 60px; width: 150px;">Gönder</button>
+            </div>
+            <div id = "btn1", style="height: 60px; width: 150px;">
+                <button id = "quiz" style="height: 60px; width: 150px;">Quiz</button>
+            </div>
+        </div>
+        <div id = "dropdown">
+            <form>  
+                <b> Kompleks moleküller </b>  
+                <select id = "myList" onchange = "favMol()" >  
+                </select>  
+                <p> Seçili molekül:   
+                <input type = "text" id = "favourite" size = "20" ></p>  
+            </form>  
+        </div>
+
+        <ul id = "onoff">
+            <li style="position:absolute; top:-10;"><p>Dönme</p></li>
+            <li><label class="switch">
+                <input checked=true type="checkbox" id="myCheck" onclick="checkFunc()">
+                <span class="slider round"></span>
+            </label></li>
+        </ul>
+
+        <script src="three.min.js"></script>
+        <script src="GLTFLoader.js"></script>
+        <script>
+            var WIDTH = window.innerWidth;
+            var HEIGHT = window.innerHeight;
+            document.getElementById("gndr").addEventListener("click", (event) => {var ext = ".gltf"; var nm = molName; if (imgormod) {ext = ".gltf"} else{ext = ".png"} location.href = "https://ucboyuttakimya.com/molekul/?molname=" + molName + "&path=" + molName + ".txt" + "&mol=" + molName + ext});
+            document.getElementById("quiz").addEventListener("click", (event) => {location.href = "https://ucboyuttakimya.com/quiz"});
+
+
+            const molecule_images = {
+                "AlS":"Al2S3.png",
+                "LiP" :"Li3P.png",
+                "LiO": "Li2O.jpg",
+                "LiN": "Li3N.png",
+                "BeO" :"BeO.png",
+                "AlP":"AlP.png",
+                "NaP":"Na3P.png",
+                "MgCl":"MgCl2.png",
+                "MgS":"MgS.png",
+                "MgP":"Mg3P2.png",
+                "NaS":"Na2S.png",
+                "FMg":"MgF2.png",
+                "HMg": "MgH2.png",          
+                "HAl": "AlH3.png",
+                "BCl":"BCl3.png",
+                "OMg":"MgO.png",
+                "NMg":"Mg3N2.png",
+                "FNa":"NaF.png",
+                "FAl":"AlF3.png",
+                "ONa":"Na2O.png",
+                "OAl":"Al2O3.png",
+                "LiC": "Li4C.png",
+                "CNa":"Na4C.png",
+                "CMg":"Mg2C.png",
+                "CAl":"Al4C3.png",
+                "NAl":"AlN.png",
+                "NSi":"3Si4N.png",
+            }
+
+            const molecule_lookup = {
+                "HH" : "DuzAynı",
+                "HLi": "iyonik kristal",
+                "HBe": "doğrusal",
+		"HB" : "bh3",
+                "HB" : "üçgen piramit",
+                "HC" : "dörtyüzlü",
+                "HN" : "üçgen piramit",
+                "HO" : "açısal",
+                "HF" : "doğrusal",
+                "HNa": "iyonik kristal",
+                "HSi": "dörtyüzlü",
+                "HP" : "üçgen piramit",
+                "HS" : "açısal",
+                "HCl": "doğrusal",
+                "LiF": "iyonik kristal",
+                "LiCl":"iyonik kristal",
+                "BeC" :"doğrusal",
+                "BeN" :"",
+                "BeF" :"doğrusal",
+                "BeP" :"",
+                "BeS" :"",
+                "BeCl" :"doğrusal",
+                "BB": "",
+                "BC": "",
+                "BN": "",
+                "BO": "",
+                "BF": "üçgen piramit",
+                "BP":"",
+                "BS":"",
+                "CC":"DuzAynı",
+                "CN":"C3N4",
+                "CO":"açısal",
+                "CF":"dörtyüzlü",
+                "CSi":"",
+                "CP":"",
+                "CS":"C2S4",
+                "CCl":"dörtyüzlü",
+                "NN":"DuzAynı",
+                "NO":"iki açısal",
+                "NF":"üçgen piramit",
+                "NNa":"Na3N",
+                "NP":"doğrusal",
+                "NS":"iki açısal",
+                "NCl":"üçgen piramit",
+                "OO":"DuzAynı",
+                "OF":"açısal",
+                "OSi":"açısal",
+                "OP":"iki açısal",
+                "OS":"açısal",
+                "OCl":"DuzAynı",
+                "FF": "DuzAynı",
+                "FSi":"dörtyüzlü",
+                "FP":"üçgen piramit",
+                "FS":"açısal",
+                "FCl":"doğrusal",
+                "NaCl":"iyonik kristal",
+                "AlCl":"üçgen piramit",
+                "SiP":"",
+                "SiS":"açısal",
+                "SiCl":"dörtyüzlü",
+                "PP":"DuzAynı",
+                "PS":"iki açısal",
+                "PCl":"üçgen piramit",
+                "SS":"DuzAynı",
+                "SCl":"açısal",
+                "ClCl":"DuzAynı"
+
+            }
+
+            const normalColor = "#ccc";
+            const highlightColor = "#FDFF47";
+            var selected = [];
+
+            const molekül_isimler = ["11", "41", "dörtyüzlü","Benzen", "C2S4",  "CH2O", "SO2", "iyonik kristal","KarePiramit","ucgen cıftpıramıt","KareDuzlem","C3N4","doğrusal","iki açısal","Na3N","açısal", "üçgen piramit"];
+            const dropdown_names = ["11", "41", "dörtyüzlü","Benzen", "C2S4",  "CH2O", "SO2", "iyonik kristal","KarePiramit","ucgen cıftpıramıt","KareDuzlem","C3N4","doğrusal","iki açısal","Na3N","açısal", "üçgen piramit"];
+            
+            const düğmeler = [["H", " ", " ", " ", " ", " ", " ", "He"], ["Li", "Be", "B", "C", "N", "O", "F", "Ne"], ["Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar"]]
+            const metalness =[[false, false, false, false, false, false, false, false], [true, true, true, false, false, false, false, false], [true, true, true, true, false, false, false, false]]
+            var table = document.getElementById("MolTable").getElementsByTagName('tbody')[0];
+            table.className="table";
+
+            var spin = true;
+            function checkFunc() {
+                var checkBox = document.getElementById("myCheck");
+                spin = !spin;
+                if (checkBox.checked == true){
+                    render()
+                }
+            }
+            
+            var mouseDown = false,
+            mouseX = 0,
+            mouseY = 0;
+            addMouseHandler(document.getElementById("molecule"))
+            function onMouseMove(evt) {
+                if (!mouseDown) {
+                    return;
+                }
+
+                evt.preventDefault();
+
+                var deltaX = evt.clientX - mouseX,
+                    deltaY = evt.clientY - mouseY;
+                mouseX = evt.clientX;
+                mouseY = evt.clientY;
+                rotateScene(deltaX, deltaY);
+            }
+
+            function onMouseDown(evt) {
+                evt.preventDefault();
+
+                mouseDown = true;
+                mouseX = evt.clientX;
+                mouseY = evt.clientY;
+            }
+
+            function onMouseUp(evt) {
+                evt.preventDefault();
+
+                mouseDown = false;
+            }
+
+            function addMouseHandler(canvas) {
+                canvas.addEventListener('mousemove', function (e) {
+                    onMouseMove(e);
+                }, false);
+                canvas.addEventListener('mousedown', function (e) {
+                    onMouseDown(e);
+                }, false);
+                canvas.addEventListener('mouseup', function (e) {
+                    onMouseUp(e);
+                }, false);
+            }
+            function rotateScene(deltaX, deltaY) {
+                selected_mol.rotation.y += deltaX / 100;
+                selected_mol.rotation.x += deltaY / 100;
+                if (!spin){render();}
+                
+            }
+
+            var canvas = document.getElementById("molecule");
+            canvas.addEventListener("touchstart", touch2Mouse, true);
+            canvas.addEventListener("touchmove", touch2Mouse, true);
+            canvas.addEventListener("touchend", touch2Mouse, true);
+            function touch2Mouse(e)
+            {
+                var theTouch = e.changedTouches[0];
+                var mouseEv;
+
+                switch(e.type)
+                {
+                    case "touchstart": mouseEv="mousedown"; break;  
+                    case "touchend":   mouseEv="mouseup"; break;
+                    case "touchmove":  mouseEv="mousemove"; break;
+                    default: return;
+                }
+
+                var mouseEvent = document.createEvent("MouseEvent");
+                mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, theTouch.screenX, theTouch.screenY, theTouch.clientX, theTouch.clientY, false, false, false, false, 0, null);
+                theTouch.target.dispatchEvent(mouseEvent);
+
+                e.preventDefault();
+            }
+            var imgormod = true;
+            function changeMol(molName, img) {
+                var molNow = moleküller[current_mol].molekül;
+                console.log("imagemod       imagemod");
+                console.log(imgormod);
+
+                if (imgormod){
+                    if(molName != ""){
+                        molNow.traverse ( function (child) {
+                                if (child instanceof THREE.Mesh) {
+                                    child.visible = false;
+                                }
+                            })
+                    }
+                }else{
+                    if(molName != ""){
+                        scene.remove(window.sprite);
+                    }
+                }
+
+                if (img) {
+                    if(molName != ""){
+                        
+                        console.log("pppp");
+                        console.log(molName);
+                        
+                        imgormod = false;
+                        var tex = new THREE.TextureLoader().load( molName , function ( map ) {
+                            var halfHeight = 20 / Math.tan( camera.fov/2 * Math.PI / 180 );
+                            var yscale = halfHeight * 2;
+                            var xscale = yscale * map.image.height / map.image.height ;
+                            console.log("ppppp");
+                            console.log(20 * map.image.height / map.image.height)
+
+                            var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+                            window.sprite = new THREE.Sprite( material );
+                            window.sprite.material.transparent = true;
+                            window.sprite.material.opacity = 1;
+                            window.sprite.scale.set(12 * map.image.width / map.image.height, 12, 1);
+                            
+                            scene.add(window.sprite);
+                        } );
+
+                        
+                    }
+                }else{
+                    
+                    if(molekül_isimler.includes(molName)){
+                        imgormod = true;
+                        current_mol = molekül_isimler.indexOf(molName);
+                        console.log(moleküller);
+                        var newMol = moleküller.find(x => x.isim === molName).molekül;
+                        
+                        newMol.traverse ( function (child) {
+                            if (child instanceof THREE.Mesh) {
+                                child.visible = true;
+                            }
+                        })
+                        selected_mol = newMol;
+                        hlight.target = selected_mol;
+                        if (!spin) {
+                            render();
+                        }       
+                    }  
+                }
+            }
+
+            function favMol() {  
+                var mylist = document.getElementById("myList");  
+                document.getElementById("favourite").value = mylist.options[mylist.selectedIndex].text;
+                molName = mylist.options[mylist.selectedIndex].text;
+                console.log(molName);
+                changeMol(molName);
+                    
+            }  
+
+            const select = document.getElementById("myList");
+            for (const i of dropdown_names) {
+                var op = document.createElement('option');
+                op.innerText = i;
+                select.appendChild(op);
+            }
+
+            for (const i of düğmeler) {
+                var tr = document.createElement('tr');
+                for (const j of i) {
+                    if (j == " "){
+                        var td = document.createElement('td');
+                        td.style="width:100%";
+                        var button = document.createElement("SPAN");
+                        td.appendChild(button);
+		                tr.appendChild(td);
+                    }else{
+                        var td = document.createElement('td');
+                        td.style="width:100%; height:33%";
+                        var button = document.createElement("BUTTON");
+                        button.className = "table_but";
+                        button.type = "button";
+                        button.style = "width:100%; height:100%";
+                        button.id = j;
+                        button.value = j;
+                        button.textContent = j;
+                        td.appendChild(button);
+                        tr.appendChild(td);
+                    }
+                    
+                }
+                table.appendChild(tr);
+            }
+
+//            var button = document.createElement("BUTTON");
+//          button.className = "table_but";
+//          button.type = "button";
+//          button.style = "width:100%; height:100%";
+//          button.id = 'gndr';
+//          button.value = 'Gönder';
+//          button.textContent = 'Gönder';
+
+            function randomIntFromInterval(min, max) {
+                return Math.floor(Math.random() * (max - min + 1) + min)
+            }
+
+            class Moleküller {
+                constructor(molekül, isim, start_x, start_y, start_z) {
+                    this.molekül = molekül;
+                    this.isim = isim;
+                    this.start_x = start_x;
+                    this.start_y = start_y;
+                    this.start_z = start_z;
+                }
+            }
+            var moleküller = new Array(molekül_isimler.length);
+            var current_mol = 2;
+            let selected_mol;
+
+            var renderer = new THREE.WebGLRenderer({antialias:true, canvas: molecule});
+            var hlight = new THREE.DirectionalLight( 0xffffff, 1.1 );
+            hlight.position.z = 25;
+            hlight.position.y = 0;
+            hlight.position.x = 0;
+
+            const vertices = [];
+
+            for ( let i = 0; i < 200; i ++ ) {
+
+                const x = (Math.random() - 0.5) * 80;
+                const y = (Math.random() - 0.5) * 80;
+                const z = ((Math.random() - 1) * 32);
+
+                vertices.push( x, y, z );
+
+            }
+            const geometry = new THREE.BufferGeometry();
+            geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+            let sprite = new THREE.TextureLoader().load( 'star.png',);
+            const material = new THREE.PointsMaterial( { size: 0.5, map: sprite, transparent: true, opacity: 0.5} );
+            const points = new THREE.Points( geometry, material );
+
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setClearColor(0x93A67F, 1);
+
+
+            var scene = new THREE.Scene();
+            scene.add(hlight);
+            scene.add(points);
+
+            let molekül, start_x, start_y, start_z;
+            var ship_material = new THREE.MeshBasicMaterial( { color: 0x49ef4 } );
+            let loader = new THREE.GLTFLoader();
+
+            function load_all(i, current_mol) {
+                // gltf dosyalarını yükle
+
+                let isim = molekül_isimler[i]
+
+
+                loader.load(isim + ".gltf", function(gltf){
+                scene.add(gltf.scene)
+
+                
+                if (current_mol != i) {
+                    gltf.scene.traverse ( function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.visible = false;
+                        child.material.metalness = 0;
+                    }
+                });
+                }
+
+                molekül = gltf.scene
+                molekül.position.z = -8;
+                start_x = molekül.scale.x + 1;
+                start_y = molekül.scale.y + 1;
+                start_z = molekül.scale.z + 1;
+                moleküller[i] = new Moleküller(molekül, isim, start_x, start_y, start_z);
+
+                if (current_mol == i){
+                    selected_mol = molekül;
+                    hlight.target = selected_mol;
+                    render();
+                    
+                }
+
+                console.log(current_mol)
+                console.log(i)
+                if (i == molekül_isimler.length - 1) {
+                    gltf.scene.traverse ( function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material.metalness = 0;
+                    }
+                });
+
+                }
+                
+
+            });
+            }
+            
+            for (let index = 0; index < molekül_isimler.length; index++) {
+                
+                load_all(index, current_mol)
+            }
+            function createStats() {
+                var stats = new Stats();
+                stats.setMode(0);
+
+                stats.domElement.style.position = 'absolute';
+                stats.domElement.style.left = '0';
+                stats.domElement.style.top = '0';
+
+                return stats;
+            }
+
+            function gcd_two_numbers(x, y) {
+                x = Math.abs(x);
+                y = Math.abs(y);
+                while(y) {
+                    var t = y;
+                    y = x % y;
+                    x = t;
+                }
+                return x;
+            }
+
+            
+
+            var t = 0;
+            var camera = new THREE.PerspectiveCamera(70, WIDTH/HEIGHT);
+            camera.position.z = 20;
+            camera.position.y = -2;
+            scene.add(camera);
+
+
+            function render() {
+                if (spin){
+                    requestAnimationFrame(render);
+                    moleküller[current_mol].molekül.rotation.y = moleküller[current_mol].molekül.rotation.y + 0.05;
+                }
+                renderer.render(scene, camera);
+                //t += 0.01;
+                //moleküller[current_mol].molekül.scale.x = Math.abs(Math.sin(t)) + start_x;
+
+            }
+
+            document.getElementById("MolTable").addEventListener("click", (event) => {
+                console.log(event.target.nodeName);
+                const isButton = event.target.nodeName == "BUTTON";
+                let name = event.target.id;
+                console.log(selected);
+                if (!isButton) {
+                    return;
+                }
+                if (selected.includes(event.target.id)){
+                    console.log("hey");
+                    event.target.style.backgroundColor = normalColor;
+                    selected = selected.filter(item => item !== event.target.id)
+                    return;
+                }
+                console.log("hola");
+                if (selected.length == 1) {
+
+                    if(molekül_isimler.includes(selected[0]+event.target.id)){
+                        //var molName = selected[0]+event.target.id;
+                    }else if(molekül_isimler.includes(event.target.id+selected[0])){
+                        //var molName = event.target.id+selected[0];
+                    }else{
+                        //var molName = getMolName(document.getElementById(selected[0]).closest('td').cellIndex + 1, event.target.closest('td').cellIndex + 1, metalness[document.getElementById(selected[0]).closest('tr').rowIndex][document.getElementById(selected[0]).closest('td').cellIndex], metalness[event.target.closest('tr').rowIndex][event.target.closest('td').cellIndex], selected[0], event.target.id)
+                    
+                    }
+
+                    var isimg = false;
+
+                    if(selected[0]+event.target.id in molecule_lookup){
+                        molName = molecule_lookup[selected[0]+event.target.id];
+                    }else if(event.target.id+selected[0] in molecule_lookup){
+                        molName = molecule_lookup[event.target.id+selected[0]];
+                    }else if(selected[0]+event.target.id in molecule_images){
+                        molName = molecule_images[selected[0]+event.target.id];
+                        isimg = true;
+                    }else if(event.target.id+selected[0] in molecule_images){
+                        molName = molecule_images[event.target.id+selected[0]];
+                        isimg = true;
+                    }
+                    else{
+                        molName = "";
+                    }
+                    console.log(molName);
+                    changeMol(molName, isimg);
+                    
+                }else if(selected.length == 2){
+
+                    document.getElementById(selected[0]).style.backgroundColor = normalColor;
+                    document.getElementById(selected[1]).style.backgroundColor = normalColor;
+                    selected = [];
+                    
+                }
+                event.target.style.backgroundColor = highlightColor;
+                selected.push(name);
+                console.log(event.target.closest('tr').rowIndex + 1);
+                console.log(event.target.closest('td').cellIndex + 1);
+                return;
+            
+            });
+
+
+        </script>
+         
+    </div>
+</body>
+</html>
