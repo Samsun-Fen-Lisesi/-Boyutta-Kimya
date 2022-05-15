@@ -1,0 +1,11 @@
+Şeffaf sıvı halde kovalent bir bileşiktir
+Molekül polardır
+Molekül kütlesi 18,015 g/mol
+Erime noktası 0°C
+Kaynama noktası 100°C
+
+
+VESPR gösterimi:A2E2
+Bağın polaritesi:POLAR
+Molekül geometrisi:Kırık doğru
+hibritleşmesi:SP3

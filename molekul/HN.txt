@@ -1,0 +1,11 @@
+Renksiz gaz halinde kovalent bir bileşiktir
+Molekül polardır 
+Suda çözünürlüğü 25 °C’de 31% w/w
+Erime noktası -77,73 °C
+Kaynama noktası -33,34 °C
+Kritik sıcaklığı 132,4 °C
+
+VESPR gösterimi:AX3E
+Bağın polaritesi:POLAR
+Molekül geometrisi:Üçgen pramit
+hibritleşmesi:SP3

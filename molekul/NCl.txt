@@ -1,0 +1,11 @@
+Sarı yağlı keskin kokulu sıvı bir kovalent bileşiktir
+Suyla homojen bir karışım oluşturmaz 
+Molekül polardır
+Molekül kütlesi 120,3657g/mol (*)
+Erime noktası -40 °C
+Kaynama noktası 71 °C
+
+VESPR gösterimi: AX3E
+Bağın polaritesi:Polar
+Molekül geometrisi:üçgen pramit
+Hibritleşmesi:SP3
