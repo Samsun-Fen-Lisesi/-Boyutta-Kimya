@@ -1,0 +1,168 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Molekül Detayları</title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+		<script src="../three.min.js"></script>
+        <script src="../GLTFLoader.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.scrolly.min.js"></script>
+		<script src="js/jquery.dropotron.min.js"></script>
+		<script src="js/jquery.scrollex.min.js"></script>
+		<script src="js/skel.min.js"></script>
+		<script src="js/skel-layers.min.js"></script>
+		<script src="js/init.js"></script>
+		<noscript>
+			<link rel="stylesheet" href="css/skel.css" />
+			<link rel="stylesheet" href="css/style.css" />
+			<link rel="stylesheet" href="css/style-xlarge.css" />
+		</noscript>
+		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	</head>
+	<body class="landing">
+		<!-- Header -->
+			<header id="header">
+				<h1 id="logo"><a href="https://ucboyuttakimya.com">Üç Boyutta Kimya</a></h1>
+				<nav id="nav">
+					<ul>
+						<li><b id="txt" style="margin: auto; color: white; scale:2; font-family:'Helvetica'; top: 40px; left: 45%">Üç Boyutta Kimya</b>
+						<li><a href="https://ucboyuttakimya.com/quiz">Quiz</a></li>
+						<li><a href="https://ucboyuttakimya.com" class="button special">Anasayfa</a></li>
+					</ul>
+				</nav>
+			</header>
+
+		<!-- Banner -->
+			<section id="banner">
+				<div id='textContainer' class="content">
+					<div id='textContainer' style="text-align: center;"></div>
+					<canvas id='molecule' style="padding-left: 0;
+					padding-right: 0;
+					margin-left: auto;
+					margin-right: auto;
+					display: block;"></canvas>
+				</div>
+			</section>
+			
+			<iframe id="frmFile" onload="LoadFile();" style="display: none;"></iframe>
+	</body>
+	<script>
+        const loader = new THREE.GLTFLoader();
+	readParam();
+
+	var WIDTH = window.innerWidth/1.2;
+        var HEIGHT = window.innerHeight/1.7;
+        var canvas = document.getElementById("molecule");
+	let selectedMol;
+
+	var renderer = new THREE.WebGLRenderer({antialias:true, canvas: canvas});
+        var hlight = new THREE.DirectionalLight( 0xffffff, 1.1 );
+        hlight.position.z = 25;
+        hlight.position.y = 0;
+        hlight.position.x = 0;
+
+        renderer.setSize(WIDTH, HEIGHT);
+        renderer.setClearColor(0x1c1d26, 1);
+
+        var scene = new THREE.Scene();
+        scene.add(hlight);
+
+        let molekül, start_x, start_y, start_z;
+
+	camera = new THREE.PerspectiveCamera(70, WIDTH/HEIGHT);
+        camera.position.z = 20;
+        camera.position.y = -2;
+        scene.add(camera);
+
+	loadAll();
+
+	function loadAll() {
+                // gltf dosyalarını yükle
+
+		if (window.fileFormat == "gltf") {
+
+                	loader.load("../" + window.gltfId + ".gltf", function(gltf){
+                	scene.add(gltf.scene)
+                
+                	molekül = gltf.scene
+                	molekül.position.z = -8;
+               		start_x = molekül.scale.x + 3;
+                	start_y = molekül.scale.y + 3;
+                	start_z = molekül.scale.z + 3;
+
+			selected_mol = molekül;
+			hlight.target = selected_mol;
+
+			gltf.scene.traverse ( function (child) {
+			if (child instanceof THREE.Mesh) {
+			    child.material.metalness = 0;
+			}}
+			);
+			render();
+			}
+			);
+		}
+
+		else if (window.fileFormat == "png") {
+                        var tex = new THREE.TextureLoader().load("../" +  gltfId + ".png" , function ( map ) {
+                            var halfHeight = 20 / Math.tan( camera.fov/2 * Math.PI / 180 );
+                            var yscale = halfHeight * 2;
+                            var xscale = yscale * map.image.height / map.image.height ;
+                            console.log("ppppp");
+                            console.log(20 * map.image.height / map.image.height)
+
+                            var material = new THREE.SpriteMaterial( { map: map, color: 0xffffff } );
+                            window.sprite = new THREE.Sprite( material );
+                            window.sprite.material.transparent = true;
+                            window.sprite.material.opacity = 1;
+                            window.sprite.scale.set(12 * map.image.width / map.image.height, 12, 1);
+
+                            scene.add(window.sprite);
+			    render();
+                        } );
+		}
+            }
+
+        function readParam() {
+                let params = new URLSearchParams(location.search);
+                // var name = params.get('molName');
+                var txtId = params.get('desc');
+		window.gltfId = params.get('mol');
+		window.fileFormat = window.gltfId.split('.')[1];
+		window.gltfId = window.gltfId.split('.')[0];
+		console.log(fileFormat);
+                // console.log(name, path);
+		document.getElementById("frmFile").src=txtId+".txt";
+		document.getElementById("txt").innerHTML=txtId;
+        }
+
+        function LoadFile() {
+                var div = document.getElementById('textContainer');
+                var oFrame = document.getElementById("frmFile");
+                var strRawContents = oFrame.contentWindow.document.body.childNodes[0].innerHTML;
+                while (strRawContents.indexOf("\r") >= 0)
+                            strRawContents = strRawContents.replace("\r", "");
+                var arrLines = strRawContents.split(".");
+                console.log(arrLines);
+                for (var i = 0; i < arrLines.length; i++) {
+                        var p = document.createElement('p');
+                        var curLine = arrLines[i];
+                        p.innerText=curLine;
+                        div.appendChild(p);
+                 }
+        }
+
+	function render() {
+                requestAnimationFrame(render);
+		console.log(window.fileFormat);
+		if (window.fileFormat == "gltf") {
+			selected_mol.rotation.y = selected_mol.rotation.y + 0.05;
+		}
+                renderer.render(scene, camera);
+            }
+</script>
+</html>

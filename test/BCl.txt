@@ -1,0 +1,11 @@
+Renksiz gaz halinde bir kovalent bileşktir
+Molekül apolardır
+Molekül kütlesi 117,17 g/mol
+Yoğunluğu 1,326 g/cm3
+Erime noktası -107,3 °C
+Kaynama noktası 12,6 °C
+
+VESPR gösterimi:AX3
+Bağın polaritesi:APOLAR
+Molekül geometrisi:Üçgen düzlem
+Hibritleşmesi: sp2

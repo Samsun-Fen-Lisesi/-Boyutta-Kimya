@@ -1,0 +1,6 @@
+Gri renkli iyonik yapılı bi bileşiktir
+Suyla tepkime verir
+Molekül kütlesi 7,95 g/mol
+Yoğunluğu 0,78 g/cm3
+Erime noktası 688,7 °C
+Kaynama noktası 900-1000 °C

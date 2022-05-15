@@ -1,0 +1,12 @@
+Sülfür içeren oragnik bileşikleri oluşturmada kullanılır
+Kırmızı renkli sıvı halde bir kovalent bileşiktir
+Molekül polardır, suda hidrolize uğrar
+Molekül kütlesi 102,97 g/mol
+Yoğunluğu 1,621 g/cm3
+Erime noktası -121 °C
+Kaynama noktası 59 °C
+
+VESPR gösterimi: AX2E2
+Bağın polaritesi:POLAR
+Molekül geometrisi:KIRIK DOĞRU
+Hibritleşmesi:SP3

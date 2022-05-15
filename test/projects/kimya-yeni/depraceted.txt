@@ -1,0 +1,46 @@
+function load_all(i, current_mol) {
+                let isim = molekül_isimler[i]
+                
+                loader.load(isim + ".gltf", function(gltf){
+                scene.add(gltf.scene)
+
+                
+                if (current_mol != i) {
+                    gltf.scene.traverse ( function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.visible = false;
+                        child.material.metalness = 0;
+                    }
+                });
+                }
+
+                molekül = gltf.scene
+                molekül.position.z = -8;
+                start_x = molekül.scale.x + 1;
+                start_y = molekül.scale.y + 1;
+                start_z = molekül.scale.z + 1;
+                moleküller[i] = new Moleküller(molekül, isim, start_x, start_y, start_z);
+
+                if (current_mol == i){
+                    selected_mol = molekül;
+                    hlight.target = selected_mol;
+                    stats = createStats();
+                    document.body.appendChild( stats.domElement );
+                    render();
+                    
+                }
+
+                console.log(current_mol)
+                console.log(i)
+                if (i == molekül_isimler.length - 1) {
+                    gltf.scene.traverse ( function (child) {
+                    if (child instanceof THREE.Mesh) {
+                        child.material.metalness = 0;
+                    }
+                });
+
+                }
+                
+
+            });
+            }
