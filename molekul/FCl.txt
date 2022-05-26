@@ -5,9 +5,8 @@ Yoğunluğu 3,779 g/L
 Erime noktası -76,34 °C
 Kaynama noktası 11,75 °C
 Suda ekzotermik hidrolize uğrar
-Molekül apolardır
 
-VESPR gösterimi: AX3E2
+VESPR gösterimi:AX3E2
 Bağın polaritesi:POLAR
 Molekül geometrisi:T seklinde
 Hibritleşmesi:sp3d

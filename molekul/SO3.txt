@@ -1,0 +1,4 @@
+VESPR gösterimi: AX3
+Bağın polaritesi:APOLAR
+Molekül geometrisi:Üçgen düzlem
+Hibritleşmesi:sp3

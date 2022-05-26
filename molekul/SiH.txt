@@ -1,0 +1,12 @@
+Renksiz gaz halinde kovalent bileşiktir
+Molekül apolardır
+Molekül kütlesi 32,117 g/mol
+Yoğunluğu 1,313 g/L
+Erime noktası -185 °C
+Kaynama nokatsı -111,9 °C
+Suyla tepkime verir
+
+VESPR gösterimi:AX4
+Bağın polaritesi:APOLAR
+Molekül geometrisi:TETRAHEDRAL(Düzgün dörtyüzlü)
+hibritleşmesi:SP3

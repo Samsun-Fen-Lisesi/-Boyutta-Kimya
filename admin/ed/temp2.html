@@ -1,0 +1,19 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] == "POST")
+{
+    $handle = fopen("dtest.txt", 'w') or die("Can't open file for writing.");
+    fwrite($fh, $_POST['textfield']);
+    fclose($fh);
+    echo "Content saved.";
+}
+else
+{
+    // Print the form
+    ?>
+    <form method="post">
+        <textarea name="textfield"></textarea>
+        <input type="submit" />
+    </form>
+    <?php
+}
+	       ?>

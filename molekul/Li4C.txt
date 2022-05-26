@@ -1,0 +1,4 @@
+Mol Kütlesi: 37.9034 g/mol
+Yoğunluk: 1.3 g/cm³
+Erime Noktası: 550°C
+Suda çözünür. 

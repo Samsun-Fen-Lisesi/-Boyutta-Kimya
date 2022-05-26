@@ -1,7 +1,7 @@
 Beyaz kristal halindeki iyonik bileşiktir
 Bir sürü kimyasalın yapısında bulunmaktadır
 Molekül kütlesi 58,443 g/mol
-Yoğunluğu 2,17 g/cm3
-Erime noktası 800,7 °C
-Kaynama noktası 1465 °C
-Suda çözünürlüğü 25°C ‘de 360g/1000g
+Yoğunluğu: 2,17 g/cm3
+Erime noktası: 800,7 °C
+Kaynama noktası: 1465 °C
+Suda çözünürlüğü: 25°C ‘de 360g/1000g

@@ -1,0 +1,6 @@
+Renksiz sıvı halinde kovalent bir bileşiktir
+Molekül kütlesi 78,114 g/mol
+Yoğunluğu 0,8765 g/cm3
+Erime noktası 5,53 °C
+Kaynama noktası 80,1 °C
+Suda çözünürlüğü 30 °C’de 1,84 g/L

@@ -1,0 +1,7 @@
+Pil yapmada kullanılan bir maddenin eldesinde, radyasyon tespit edici cihazlarda, nükleer reaktörlerde kullanılır
+Beyaz toz ya da şeffaf kristal hlina bulunan iyonik bir bileşiktir
+Molkeül kütlesi 25,939 g/mol
+Yoğunluğu 2,635 g/cm3
+Erime noktası 845 °C
+Kaynama noktası 1676 °C
+Suda çözünürlüğü 25°C’de 0,134 g/100mL

@@ -1,0 +1,10 @@
+Renksiz kovalent bileşik
+Molekül apolar
+Molekül kütlesi 143,95853 g/mol
+Yoğunluğu 2,93 g/cm3
+Erime noktası 2200  °C
+Suyla tepkime verir ve metan gazı açığa çıkar
+Trigonal düzlem
+Bağın polaritesi:apolar
+Molekül geometrisi:trigonal düzlem
+Hibritleşmesi:sp2

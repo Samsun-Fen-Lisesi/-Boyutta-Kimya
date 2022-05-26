@@ -2,5 +2,5 @@ Kahve-sarı gaz halinde kovalent bir bileşiktir
 Suda çözünür
 Molekül polardır
 Molekül kütlesi 86,9054g/mol
-Erime nokkatsı -120,6 °C
+Erime noktası -120,6 °C
 Kaynama noktası 2 °C
